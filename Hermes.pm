@@ -5,19 +5,37 @@ use Proto;
 
 
 
+our $_collection;
 
-sub new 
+
+
+
+
+
+
+
+
+
+
+sub AUTOLOAD
 {
-	my ($self, $str) = @_;
-	my $obj = Proto->get($str);
+	my ($self) = shift;
+	my ($req) = ( $AUTOLOAD =~ /::(.*)$/ );
+
+	
+	!$_collection->{$req}
+		&& ( $_collection->{$req} = Proto->$req )
+		&& ( $_collection->{$req}{ops} = rand(10) )
+		&& ( bless $_collection->{$req}, $self )
+	;
+	$_collection->{$req}->update	if $_collection->{$req};
 
 
-	bless $obj, $self;
-	$obj->update();
-
-
-	return $obj;
+	return $_collection->{$req};
 }
+
+
+
 sub update
 {
 	my ($this) = @_;

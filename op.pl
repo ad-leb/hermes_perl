@@ -14,4 +14,8 @@ use Data::Dumper;
 
 
 
-print Dumper(Hermes->new('qwer'));
+while ($_ = <STDIN>)
+{
+	chomp;
+	print Dumper(Hermes->$_);
+}
