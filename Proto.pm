@@ -39,10 +39,32 @@ sub read_config
 	{
 		next if /^$/ or /^\s*\#/;
 
-		$name = $1					if /^\s*\[(.*)\]\s*\#?.*$/;
-		$proto->{$name}{$1} = $2	if /^\s+(.*):\s+(.*)\s*\#?.*$/;
+		/^\s*\[(.*)\]\s*\#?.*$/
+			&& ($name = $1) 
+			&& push_value($name, 'name', $name)
+		||
+		/^\s+(.*):\s+(.*)\s*\#?.*$/
+			&& push_value($name, $1, $2)
+		;
 	}
 	close $fd;
+}
+
+
+
+sub push_value
+{
+	my ($name, $key, $value) = @_;		$_ = $value;
+
+
+	s/(^["']*|["';]*$)//g;
+
+	if ( /^\[.*\]$/ ) {			# it's a array
+		my @tmp = map { /(\w+)/ } split ',';
+		$proto->{$name}{$key} = \@tmp;
+	} else {					# it's a string
+		$proto->{$name}{$key} = $_;
+	}
 }
 
 

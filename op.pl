@@ -1,7 +1,6 @@
 #! /usr/bin/perl -w
 use lib '.';
 use Hermes;
-use Data::Dumper;
 
 
 
@@ -14,8 +13,10 @@ use Data::Dumper;
 
 
 
+$\ = "\n";
 while ($_ = <STDIN>)
 {
-	chomp;
-	print Dumper(Hermes->$_);
+	tr/ 	//d; chomp;
+	print Hermes->$_->to_xml;
 }
+$\ = '';

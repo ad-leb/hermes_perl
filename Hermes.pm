@@ -1,6 +1,7 @@
 package Hermes;
 use lib '.';
 use Proto;
+use Xml;
 
 
 
@@ -43,8 +44,31 @@ sub update
 
 	$this->{raw} = undef;
 
+	open my $fd, $this->{source} or die "Can't open $this->{source}!\n";
+	foreach (<$fd>)
+	{
+		next if /$this->{exclude}/;		chomp;		s/(^\s+|\s+$)//;
+
+		my @tmp = /$this->{input}/;
+		my %tmp;
+
+		map { $tmp{$_} = shift @tmp } $this->{keys}->@*;
+		push $this->{raw}->@*, \%tmp;
+	}
+	close $fd;
+
 
 	return $this;
+}
+
+
+
+sub to_xml
+{
+	my ($this) = @_;
+
+
+	return Xml::enc($this->{raw}, $this->{name});
 }
 
 
