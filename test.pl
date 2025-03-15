@@ -17,6 +17,6 @@ $\ = "\n";
 while ($_ = <STDIN>)
 {
 	tr/ 	//d; chomp;
-	print Hermes->$_->to_xml;
+	print Hermes->$_->to_xml(1);
 }
 $\ = '';

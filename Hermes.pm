@@ -52,7 +52,7 @@ sub update
 		my @tmp = /$this->{input}/;
 		my %tmp;
 
-		map { $_ = ' ' if !$_ } @tmp;						# no need 'undef'!
+		map { $_ = '00' if !$_ } @tmp;						# no need 'undef'!
 		map { $tmp{$_} = shift @tmp } $this->{keys}->@*;
 		push $this->{raw}->@*, \%tmp;
 	}
@@ -66,10 +66,13 @@ sub update
 
 sub to_xml
 {
-	my ($this) = @_;
+	my ($this, $pretty) = @_;
 
 
-	return Xml::enc($this->{raw}, $this->{name});
+	return $pretty 
+		? Xml->pretty($this->{raw}, $this->{name}) 
+		: Xml->clip($this->{raw}, $this->{name})
+	;
 }
 
 
