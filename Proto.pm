@@ -3,7 +3,7 @@ package Proto;
 
 
 
-our $proto = undef;
+our $proto;
 our $_default = {
 	config						=> 'protocols.conf',
 };
@@ -20,11 +20,11 @@ our $_default = {
 
 sub AUTOLOAD
 {
-	my ($str) = ( $AUTOLOAD =~ /::(.*)$/ );
+	my ($req) = ( $AUTOLOAD =~ /::(.*)$/ );
 
 	read_config() if !$proto;
 
-	return $proto->{$str};
+	return $proto->{$req};
 }
 
 
@@ -59,10 +59,10 @@ sub push_value
 
 	s/(^["']*|["';]*$)//g;
 
-	if ( /^\[.*\]$/ ) {			# it's a array
+	if ( /^\[.*\]$/ ) {						# it's an array
 		my @tmp = map { /(\w+)/ } split ',';
 		$proto->{$name}{$key} = \@tmp;
-	} else {					# it's a string
+	} else {								# it's a string
 		$proto->{$name}{$key} = $_;
 	}
 }

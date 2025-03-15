@@ -12,6 +12,8 @@ sub enc
 	my $str = '';
 
 
+	$name = spec_char($name);
+
 	$str .= "<$name>";
 	if ( $obj =~ /^ARRAY\(0x/ ) {
 		map { $str .= enc($obj->[$_], "item_$_") } 0..$#$obj;

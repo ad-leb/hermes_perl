@@ -47,11 +47,12 @@ sub update
 	open my $fd, $this->{source} or die "Can't open $this->{source}!\n";
 	foreach (<$fd>)
 	{
-		next if /$this->{exclude}/;		chomp;		s/(^\s+|\s+$)//;
+		next if /$this->{exclude}/;		chomp; s/(^\s+|\s+$)//;
 
 		my @tmp = /$this->{input}/;
 		my %tmp;
 
+		map { $_ = ' ' if !$_ } @tmp;						# no need 'undef'!
 		map { $tmp{$_} = shift @tmp } $this->{keys}->@*;
 		push $this->{raw}->@*, \%tmp;
 	}
